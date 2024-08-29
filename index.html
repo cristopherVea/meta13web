@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulación Round Robin</title>
+  <!-- Incluye Bootstrap CSS desde CDN -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa; /* Color de fondo claro */
+    }
+    .card {
+      background-color: #e3f2fd; /* Color de fondo de la tarjeta */
+      border-color: #90caf9; /* Color del borde de la tarjeta */
+    }
+    .card-header {
+      background-color: #42a5f5; /* Color de fondo del encabezado de la tarjeta */
+      color: white; /* Color del texto del encabezado de la tarjeta */
+    }
+    .list-group-item {
+      background-color: #bbdefb; /* Color de fondo de los elementos de la lista */
+      border-color: #90caf9; /* Color del borde de los elementos de la lista */
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <!-- Tarjeta única para mostrar los resultados de la simulación -->
+    <div class="card" style="width: 36rem;">
+      <div class="card-header">
+        Resultados de la Simulación Round Robin
+      </div>
+      <ul class="list-group list-group-flush" id="simulacion-output">
+        <!-- Aquí se insertarán los resultados de la simulación -->
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Arreglo predefinido de líneas de código JavaScript válidas
+    const codigoLineas = [
+      'console.log("Hola Mundo!");',
+      'let x = 10;',
+      'x += 5;',
+      'if (x > 10) { console.log("x es mayor que 10"); }',
+      'for (let i = 0; i < 5; i++) { console.log(i); }',
+      'const saludo = () => { return "Hola!"; };',
+      'let resultado = Math.pow(2, 3);',
+      'console.log("Fin de la ejecución.");',
+      'let y = x * 2;',
+      'console.log(`El valor de y es: ${y}`);'
+    ];
+
+    // Función para elegir una línea de código aleatoria
+    function elegirLineaAleatoria() {
+      return codigoLineas[Math.floor(Math.random() * codigoLineas.length)];
+    }
+
+    // Clase para representar un Proceso
+    class Proceso {
+      constructor(numero) {
+        this.numero = numero;
+        this.lineasDeCodigo = [];
+        this.lineaActual = 0;
+
+        // Inicializa el proceso con un número aleatorio de líneas de código (entre 3 y 6)
+        const numLineas = Math.floor(Math.random() * 4) + 3;
+        for (let i = 0; i < numLineas; i++) {
+          this.lineasDeCodigo.push(elegirLineaAleatoria());
+        }
+      }
+    }
+
+    // Función para inicializar la simulación
+    function inicializarSimulacion(numeroDeProcesos) {
+      const procesos = [];
+
+      for (let i = 0; i < numeroDeProcesos; i++) {
+        procesos.push(new Proceso(i + 1));
+      }
+
+      return procesos;
+    }
+
+    // Función para iniciar la simulación y mostrar los resultados en una tarjeta
+    function iniciarSimulacion(procesos) {
+      const outputList = document.getElementById('simulacion-output');
+      outputList.innerHTML = '';  // Limpia cualquier contenido previo
+
+      let procesosActivos = true;
+
+      // Ejecutar la simulación
+      while (procesosActivos) {
+        procesosActivos = false;
+
+        for (let proceso of procesos) {
+          if (proceso.lineaActual < proceso.lineasDeCodigo.length) {
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item';
+            listItem.textContent = `Proceso ${proceso.numero} ejecutando línea: ${proceso.lineasDeCodigo[proceso.lineaActual]}`;
+            
+            outputList.appendChild(listItem);
+            proceso.lineaActual++;
+            procesosActivos = true; // Aún hay procesos que ejecutar
+          }
+        }
+      }
+
+      console.log("Simulación completa.");
+    }
+
+    // Establecer el número de procesos a 3 de forma fija
+    const numeroDeProcesos = 3;
+
+    // Inicializar y ejecutar la simulación
+    const procesos = inicializarSimulacion(numeroDeProcesos);
+    iniciarSimulacion(procesos);
+  </script>
+
+  <!-- Incluye Bootstrap JS y dependencias desde CDN -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
